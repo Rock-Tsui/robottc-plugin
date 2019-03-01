@@ -1,0 +1,25 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+	<f:entry title="Environment Variable" field="name">
+		<f:textbox default="${instance.getName()}"
+			placeholder="Type the name of your Environment variable" />
+	</f:entry>
+
+	<f:entry title="RF TestCases Path" field="robottcPath">
+		<f:textbox id="robottcPath_${instance.uuid}" default=""
+			placeholder="Please enter the path of the Robot Framework TestCases" />
+	</f:entry>
+
+	<f:entry title="Output Argfile Path" field="argfilePath">
+		<f:textbox id="argfilePath_${instance.uuid}" default=""
+			placeholder="Please enter the output path of the TestCases config file" />
+	</f:entry>
+	
+	<f:entry title="Testbed Config File Path" field="conffilePath">
+		<f:textbox id="conffilePath_${instance.uuid}" default=""
+			placeholder="Please enter the output path of the Testbed config file" />
+	</f:entry>
+
+</j:jelly>

@@ -1,0 +1,152 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+	<style type="text/css">
+		
+		.ztree * {padding:0; margin:0; font-size:12px; font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif}
+		.ztree {margin:0; padding:5px; color:#333}
+		.ztree li{padding:0; margin:0; list-style:none; line-height:14px; text-align:left; white-space:nowrap; outline:0}
+		.ztree li ul{ margin:0; padding:0 0 0 18px}
+		.ztree li ul.line{ background:url(${rootURL}/plugin/robottc/images/line_conn.gif) 0 0 repeat-y;}
+
+		.ztree li a {padding:1px 3px 0 0; margin:0; cursor:pointer; height:17px; color:#333; background-color: transparent;
+			text-decoration:none; vertical-align:top; display: inline-block}
+		.ztree li a:hover {text-decoration:underline}
+		.ztree li a.curSelectedNode {padding-top:0px; background-color:#FFE6B0; color:black; height:16px; border:1px #FFB951 solid; opacity:0.8;}
+		.ztree li a.curSelectedNode_Edit {padding-top:0px; background-color:#FFE6B0; color:black; height:16px; border:1px #FFB951 solid; opacity:0.8;}
+		.ztree li a.tmpTargetNode_inner {padding-top:0px; background-color:#316AC5; color:white; height:16px; border:1px #316AC5 solid;
+			opacity:0.8; filter:alpha(opacity=80)}
+		.ztree li a.tmpTargetNode_prev {}
+		.ztree li a.tmpTargetNode_next {}
+		.ztree li a input.rename {height:14px; width:80px; padding:0; margin:0;
+			font-size:12px; border:1px #7EC4CC solid; *border:0px}
+		.ztree li span {line-height:16px; margin-right:2px}
+		.ztree li span.button {line-height:0; margin:0; width:16px; height:16px; display: inline-block; vertical-align:middle;
+			border:0 none; cursor: pointer;outline:none;
+			background-color:transparent; background-repeat:no-repeat; background-attachment: scroll;
+			background-image:url("${rootURL}/plugin/robottc/images/zTreeStandard.png"); *background-image:url("${rootURL}/plugin/robottc/images/zTreeStandard.gif")}
+
+		.ztree li span.button.chk {width:13px; height:13px; margin:0 3px 0 0; cursor: auto}
+		.ztree li span.button.chk.checkbox_false_full {background-position:0 0}
+		.ztree li span.button.chk.checkbox_false_full_focus {background-position:0 -14px}
+		.ztree li span.button.chk.checkbox_false_part {background-position:0 -28px}
+		.ztree li span.button.chk.checkbox_false_part_focus {background-position:0 -42px}
+		.ztree li span.button.chk.checkbox_false_disable {background-position:0 -56px}
+		.ztree li span.button.chk.checkbox_true_full {background-position:-14px 0}
+		.ztree li span.button.chk.checkbox_true_full_focus {background-position:-14px -14px}
+		.ztree li span.button.chk.checkbox_true_part {background-position:-14px -28px}
+		.ztree li span.button.chk.checkbox_true_part_focus {background-position:-14px -42px}
+		.ztree li span.button.chk.checkbox_true_disable {background-position:-14px -56px}
+		.ztree li span.button.chk.radio_false_full {background-position:-28px 0}
+		.ztree li span.button.chk.radio_false_full_focus {background-position:-28px -14px}
+		.ztree li span.button.chk.radio_false_part {background-position:-28px -28px}
+		.ztree li span.button.chk.radio_false_part_focus {background-position:-28px -42px}
+		.ztree li span.button.chk.radio_false_disable {background-position:-28px -56px}
+		.ztree li span.button.chk.radio_true_full {background-position:-42px 0}
+		.ztree li span.button.chk.radio_true_full_focus {background-position:-42px -14px}
+		.ztree li span.button.chk.radio_true_part {background-position:-42px -28px}
+		.ztree li span.button.chk.radio_true_part_focus {background-position:-42px -42px}
+		.ztree li span.button.chk.radio_true_disable {background-position:-42px -56px}
+		
+		.ztree li span.button.switch {width:18px; height:18px}
+		.ztree li span.button.root_open{background-position:-92px -54px}
+		.ztree li span.button.root_close{background-position:-74px -54px}
+		.ztree li span.button.roots_open{background-position:-92px 0}
+		.ztree li span.button.roots_close{background-position:-74px 0}
+		.ztree li span.button.center_open{background-position:-92px -18px}
+		.ztree li span.button.center_close{background-position:-74px -18px}
+		.ztree li span.button.bottom_open{background-position:-92px -36px}
+		.ztree li span.button.bottom_close{background-position:-74px -36px}
+		.ztree li span.button.noline_open{background-position:-92px -72px}
+		.ztree li span.button.noline_close{background-position:-74px -72px}
+		.ztree li span.button.root_docu{ background:none;}
+		.ztree li span.button.roots_docu{background-position:-56px 0}
+		.ztree li span.button.center_docu{background-position:-56px -18px}
+		.ztree li span.button.bottom_docu{background-position:-56px -36px}
+		.ztree li span.button.noline_docu{ background:none;}
+		
+		.ztree li span.button.ico_open{margin-right:2px; background-position:-110px -16px; vertical-align:top; *vertical-align:middle}
+		.ztree li span.button.ico_close{margin-right:2px; background-position:-110px 0; vertical-align:top; *vertical-align:middle}
+		.ztree li span.button.ico_docu{margin-right:2px; background-position:-110px -32px; vertical-align:top; *vertical-align:middle}
+		.ztree li span.button.edit {margin-right:2px; background-position:-110px -48px; vertical-align:top; *vertical-align:middle}
+		.ztree li span.button.remove {margin-right:2px; background-position:-110px -64px; vertical-align:top; *vertical-align:middle}
+		
+		.ztree li span.button.ico_loading{margin-right:2px; background:url(${rootURL}/plugin/robottc/images/loading.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+		
+		ul.tmpTargetzTree {background-color:#FFE6B0; opacity:0.8; filter:alpha(opacity=80)}
+		
+		span.tmpzTreeMove_arrow {width:16px; height:16px; display: inline-block; padding:0; margin:2px 0 0 1px; border:0 none; position:absolute;
+			background-color:transparent; background-repeat:no-repeat; background-attachment: scroll;
+			background-position:-110px -80px; background-image:url("${rootURL}/plugin/robottc/images/zTreeStandard.png"); *background-image:url("${rootURL}/plugin/robottc/images/zTreeStandard.gif")}
+		
+		ul.ztree.zTreeDragUL {margin:0; padding:0; position:absolute; width:auto; height:auto;overflow:hidden; background-color:#cfcfcf; border:1px #00B83F dotted; opacity:0.8; filter:alpha(opacity=80)}
+		.zTreeMask {z-index:10000; background-color:#cfcfcf; opacity:0.0; filter:alpha(opacity=0); position:absolute}
+		
+	</style>
+	
+	<style type="text/css">
+		ul.ztree {box-sizing:border-box;border: 1px solid #617775;background: #f0f6e4;width:20%;height:400px;overflow-y:scroll;overflow-x:auto;float:left;}
+		textarea.txtarea {box-sizing:border-box;margin-left:-1px;font-family:Arial;font-size:14px;border: 1px solid #617775;background: #f0f6e4;width:80%;height:400px;overflow-y:scroll;overflow-x:auto;float:left;resize:none;}
+	</style>
+	<style type="text/css">
+		div#rMenu {position:absolute; visibility:hidden; top:0; background-color: #555;text-align: left;padding: 2px;}
+		div#rMenu li{
+			margin: 1px 0;
+			padding: 0 5px;
+			cursor: pointer;
+			list-style: none outside none;
+			background-color: #DFDFDF;
+		}
+	</style>
+	
+	<f:block>
+		<div>
+			<div class="treeTitle">
+				Generate tests config file for Robot Framework ${it.name} :
+				<span id="checkCount" class="highlight_red" style="color:red; font-size:20px">0</span>
+			</div>
+			<div>
+				<input type="button" style="margin-right:5px" title="Expand tree" value="Expand All" onclick="expandAll_Tree(true);"/>
+				<input type="button" style="margin-right:5px" title="Fold tree" value="Close All" onclick="expandAll_Tree(false);"/>
+				<input type="button" style="margin-right:5px" title="Save selected test cases" value="Save Daily" onclick="saveDailyTests();"/>
+				<input type="button" style="margin-right:5px" title="Load selected test cases" value="Load Daily" onclick="loadDailyTests();"/>
+				<input type="button" style="margin-right:5px" title="Save test case file" value="Save File" onclick="saveTCFile();"/>
+				<input type="button" style="margin-right:5px" title="Open testbed config file" value="Open Config File" onclick="openConfFile();"/>
+				<input type="button" title="Save testbed config file" value="Save Config File" onclick="saveConfFile();"/>
+			</div>
+		</div>
+		
+		<div id="testsTreeContainer_${it.uuid}" style="width:100%;height:400px;margin-top:10px;">
+			<ul id="treeRF" class="ztree"></ul>
+			<textarea name="txtFile" id="txtFile" class="txtarea" wrap="off" spellcheck="false"></textarea>
+		</div>
+		
+		<div id="rMenu">
+			<li id="m_add" onclick="addTreeNode();">Add Node</li>
+			<li id="m_del" onclick="removeTreeNode();">Delete Node</li>
+			<li id="m_edit" onclick="editTreeNode();">Edit Node</li>
+		</div>
+
+		<div id="zhezhao" style="background-color:#000;opacity:0.05;filter:alpha(opacity=50);position:fixed;left:0;top:0;width:100%;height:100%;display:none" ></div>
+		<div id="loading" style="position:fixed;left:0;top:50%;width:100%;height:100%;display:none;text-align:center">
+			<img src="${rootURL}/plugin/robottc/images/bigloading.gif" style="border:0;width:50;height:50;"/>
+		</div>
+		
+		<span name="parameter">
+			<input type="hidden" name="name" value="${it.name}"/>
+			<input type="hidden" name="selectedTests" value="${it.argfilePath}" id="selectedTests_${it.uuid}" />
+		</span>
+	</f:block>
+
+	<script type="text/javascript" src="${rootURL}/plugin/robottc/js/jquery-1.4.4.min.js"></script>
+	<script>jQuery.noConflict();</script>
+	<script type="text/javascript" src="${rootURL}/plugin/robottc/js/jquery.ztree.core-3.5.js"></script>
+	<script type="text/javascript" src="${rootURL}/plugin/robottc/js/jquery.ztree.excheck-3.5.js"></script>	
+	<script type="text/javascript" src="${rootURL}/plugin/robottc/js/jquery.ztree.exedit-3.5.js"></script>
+	<script type="text/javascript" src="${rootURL}/plugin/robottc/js/TestCaseSelector.js"></script>
+	<script type="text/javascript">
+		var TestCaseSelectorRPC = <st:bind value="${it}"/>;
+		loadTreeFromPath("${it.robottcPath}", "${it.argfilePath}", "${it.conffilePath}", "${rootURL}");
+	</script>
+</j:jelly>
