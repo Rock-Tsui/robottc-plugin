@@ -6,6 +6,8 @@ var tcFilePath = "";
 var zTree, rMenu;
 var jenkinsRoot;
 var configPYFile ="";
+var configfileOpened = false;
+var tcfileOpened = false;
 
 var setting = {
 	check : {
@@ -135,6 +137,7 @@ function openTCFile() {
 		tcFilePath = "";
 		return;
 	}
+	tcfileOpened = true;
 	TestCaseSelectorRPC.readFile(tcFilePath, function(t) {
 		var res = t.responseObject();
 		displayFile(res);
@@ -145,6 +148,7 @@ function openConfFile() {
 	if (configPYFile == "") {
 		return;
 	}
+	configfileOpened = true;
 	TestCaseSelectorRPC.readFile(configPYFile, function(t) {
 		var res = t.responseObject();
 		displayFile(res);
@@ -161,7 +165,13 @@ function saveTCFile() {
 	if (tcFilePath == "") {
 		return;
 	}
+	if (tcfileOpened == false)
+	{
+		alert('Testcase file is not opened!');
+		return;
+	}
 	if(confirm("Save TestCase File?" + "\n" + tcFilePath)){
+		tcfileOpened = false;
 		TestCaseSelectorRPC.writeFile(tcFilePath, strFile, 
 		function(t) {
 			var res = t.responseObject();
@@ -186,7 +196,13 @@ function saveConfFile() {
 	if (configPYFile == "") {
 		return;
 	}
+	if (configfileOpened == false)
+	{
+		alert('Config file is not opened!');
+		return;
+	}
 	if(confirm("Save Config File?" + "\n" + configPYFile)){
+		configfileOpened = false;
 		zheZhaoDIV(true);
 		TestCaseSelectorRPC.writeFile(configPYFile, strFile, 
 		function(t) {

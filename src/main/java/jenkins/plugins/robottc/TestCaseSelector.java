@@ -9,6 +9,8 @@ import hudson.model.SimpleParameterDefinition;
 import hudson.model.Hudson;
 import hudson.model.StringParameterValue;
 
+import sp.sd.fileoperations.dsl.FileOperationsJobDslContext;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -281,7 +283,9 @@ public class TestCaseSelector extends SimpleParameterDefinition {
 		if (flag) {
 			if (!file.exists()) {
 				try {
-					file.createNewFile();
+					//file.createNewFile();
+					FileOperationsJobDslContext fojdc = new FileOperationsJobDslContext();
+					fojdc.fileCreateOperation(filePath);
 					return null;
 				} catch (IOException e) {
 					return e.toString();
@@ -289,7 +293,9 @@ public class TestCaseSelector extends SimpleParameterDefinition {
 			}
 		} else {
 			if (!file.exists() && !file.isDirectory()) {
-				file.mkdir();
+				//file.mkdir();
+				FileOperationsJobDslContext fojdc = new FileOperationsJobDslContext();
+				fojdc.folderCreateOperation(filePath);
 				return null;
 			} else {
 				return "Directory is exist!";
